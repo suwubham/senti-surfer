@@ -24,14 +24,22 @@ Go to the project directory and install dependencies
   npm install
 ```
 
+Create a .env file and add Google API key. Your env file should look like this:
+
+```bash
+  VITE_YTAPI_KEY = your_api_key
+```
+> [Instructions to obtain API key 🗝️](https://developers.google.com/youtube/v3/getting-started)
+
 Build the project
 
 ```bash
   npm run build
 ```
 
-## Usage
 
+
+## Usage
     1. Open extension settings in your web browser and activate developer mode.
 
     2. Click on "Load unpacked" to load the dist folder located in the project directory.
