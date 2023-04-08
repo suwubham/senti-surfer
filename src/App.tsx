@@ -24,7 +24,7 @@ function App() {
         Get Comments!
       </button>
 
-      {!valid && <p className="text-re">Not a valid youtube video</p>}
+      {!valid && <p className="text-red-700">Not a valid youtube video</p>}
       <ol>
         <div className="flex flex-col items-center justify-center">
           {comments.map((comment) => {
