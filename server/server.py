@@ -1,8 +1,18 @@
 from typing import List
 from fastapi import FastAPI
 from nltk.sentiment import SentimentIntensityAnalyzer
+from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/analyze-sentiment")
 def analyze_sentiment(sentences: List[str]):
