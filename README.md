@@ -37,12 +37,25 @@ Build the project
   npm run build
 ```
 
+Go to server directory and install dependencies
+
+```bash
+  cd server
+  pip install requirements.txt
+```
+
 
 
 ## Usage
     1. Open extension settings in your web browser and activate developer mode.
 
     2. Click on "Load unpacked" to load the dist folder located in the project directory.
+
+    3. Go to server directory and start server
+    
+        > uvicorn server:app --reload
+
+
 ## Documentation
 
 [Project Proposal](https://docs.google.com/document/d/1GOC7XxknxBl4_4kPFoMYAeulTjMmAgpyL3zbbdn-Jc8/edit?usp=sharing)
