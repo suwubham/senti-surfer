@@ -1,12 +1,12 @@
 import "./App.css";
-import axios from "axios";
 import { useState } from "react";
 import { SentimentResults } from "./types/sentimentresult";
+import { getSentimentResults } from "./services/getsentiment.service";
+import { getComments } from "./services/getcomments.service";
 
 function App() {
   const [comments, setComments] = useState<string[]>([]);
   const [valid, setValid] = useState<boolean>(true);
-
   const [sentimentResults, setSentimentResults] = useState<SentimentResults>(
     {}
   );
@@ -54,51 +54,12 @@ function App() {
   );
 }
 
-async function getSentimentResults(sentences: string[]) {
-  console.log(sentences);
-  try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/analyze-sentiment",
-      sentences
-    );
-    const results = response.data;
-    console.log(results);
-    return results;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 const calculateAverage = (sentimentResults: SentimentResults) => {
   const total_compund = Object.keys(sentimentResults).reduce(
     (acc, key) => acc + sentimentResults[key].compound,
     0
   );
   return total_compund / Object.keys(sentimentResults).length;
-};
-
-const getComments = async (videoId: string | null) => {
-  const params = {
-    part: "snippet",
-    videoId: videoId,
-    maxResults: 100,
-    key: import.meta.env.VITE_YTAPI_KEY,
-  };
-
-  try {
-    const response = await axios.get(
-      "https://www.googleapis.com/youtube/v3/commentThreads",
-      { params }
-    );
-    const comments = response.data.items.map(
-      (item: any) => item.snippet.topLevelComment.snippet.textDisplay
-    );
-    console.log(`Retrieved ${comments.length} comments:`);
-    return comments;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
 };
 
 const getVideoId = (url: string) => {
