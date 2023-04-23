@@ -15,6 +15,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def get_sentiment(row):
+    if row["positive"] > 0:
+        return "Positive"
+    if row["negative"] > 0:
+        return "Negative"
+    else:
+        return "Neutral"
+
 @app.post("/analyze-sentiment")
 def analyze_sentiment(sentences: List[str]):
     sia = SentimentIntensityAnalyzer()
@@ -28,5 +36,6 @@ def analyze_sentiment(sentences: List[str]):
             sentiment['compound']
         ]
     results['compound'] = (results['compound'] + 1) * 50
+    results["sentiment"] = results.apply(get_sentiment, axis = 1)
     results.to_csv("data.csv")
     return results.to_dict(orient='index')

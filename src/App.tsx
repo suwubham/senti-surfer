@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SentimentResults } from "./types/sentimentresult";
 import { getSentimentResults } from "./services/getsentiment.service";
 import { getComments } from "./services/getcomments.service";
+import BarChart from "./components/BarChart";
 
 function App() {
   const [comments, setComments] = useState<string[]>([]);
@@ -32,13 +33,17 @@ function App() {
     <div className="App flex flex-col items-center justify-center gap-3">
       <h1 className="text-3xl font-bold underline">Senti-Surfer</h1>
       <button onClick={handleClick}>Analyze</button>
-
       <div className="mt-4 flex flex-col gap-2">
         <p className="font-bold">
           {Object.keys(sentimentResults).length != 0 ? (
-            <p>
-              Average Sentiment Score : {calculateAverage(sentimentResults)}
-            </p>
+            <>
+              <p>
+                Average Sentiment Score : {calculateAverage(sentimentResults)}
+              </p>
+              <div className="w-96 h-96 bg-slate-400 flex items-center justify-center">
+                <BarChart test={sentimentResults} />
+              </div>
+            </>
           ) : null}
         </p>
         {Object.keys(sentimentResults).map((result) => (
@@ -75,7 +80,6 @@ const getVideoId = (url: string) => {
   const match = url.match(regex);
 
   if (match) {
-    console.log(match);
     return match[1];
   }
   return null;
