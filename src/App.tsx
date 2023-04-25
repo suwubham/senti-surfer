@@ -8,6 +8,7 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
+import Barchart from "./components/BarChart";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -33,18 +34,13 @@ function App() {
   }, []);
 
   const handleClick = async () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      const currentUrl = tabs[0].url;
-      if (currentUrl) {
-        const videoId = getVideoId(currentUrl);
-        if (videoId) {
-          const data = await getYoutubeSentiment({ videoId: videoId });
-          setSentimentResults(data);
-        } else {
-          setValid(false);
-        }
-      }
-    });
+    const videoId = getVideoId(currentTab!);
+    console.log(videoId);
+    if (videoId) {
+      const sentimentResults = await getYoutubeSentiment({ videoId: videoId });
+      setSentimentResults(sentimentResults);
+      console.log(sentimentResults);
+    }
   };
 
   return (
@@ -71,14 +67,21 @@ function App() {
         ) : (
           <div className="test border border-dashed border-red-400 p-4 text-red-500 rounded-2xl flex gap-2 items-center">
             <ExclamationCircleIcon className="w-8 h-8" />
-            No cotent available for analysis.
+            No content available for analysis.
           </div>
         )}
 
-        <button className="flex items-center justify-center gap-2">
+        <button
+          className="flex items-center justify-center gap-2"
+          onClick={handleClick}
+        >
           Analyse
           <ChartBarIcon className="w-5 h-5" />
         </button>
+
+        {Object.keys(sentimentResults).length > 0 && (
+          <Barchart test={sentimentResults} />
+        )}
       </main>
     </div>
   );

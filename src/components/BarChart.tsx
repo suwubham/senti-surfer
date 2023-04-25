@@ -29,16 +29,20 @@ export default (props: any) => {
         indexBy="sentiment"
         margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
         padding={0.3}
-        colors={{ scheme: "accent" }}
+        colors={["white"]}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
+          // @ts-ignore
+          tickLabel: { color: "white", style: { fill: "white" } },
         }}
         axisLeft={{
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
+          // @ts-ignore
+          tickLabel: { color: "white", style: { fill: "white" } },
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}
