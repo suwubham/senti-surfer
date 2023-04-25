@@ -1,16 +1,36 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SentimentResults } from "./types/sentimentresult";
-import { getSentimentResults } from "./services/getsentiment.service";
-import { getComments } from "./services/getcomments.service";
-import BarChart from "./components/BarChart";
+import {
+  ArrowDownOnSquareIcon,
+  ChartBarIcon,
+  ExclamationCircleIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline";
+import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
+
+function isValidYoutubeVideo(url: string) {
+  const youtubeUrlPattern =
+    /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/)?([a-zA-Z0-9_-]{11})/;
+  return youtubeUrlPattern.test(url);
+}
 
 function App() {
-  const [comments, setComments] = useState<string[]>([]);
-  const [valid, setValid] = useState<boolean>(true);
+  const [valid, setValid] = useState<boolean>(false);
   const [sentimentResults, setSentimentResults] = useState<SentimentResults>(
     {}
   );
+  const [currentTab, setCurrentTab] = useState<string | undefined>("");
+
+  useEffect(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+      const currentUrl = tabs[0].url;
+      setCurrentTab(currentUrl);
+      if (currentUrl) {
+        isValidYoutubeVideo(currentUrl) ? setValid(true) : setValid(false);
+      }
+    });
+  }, []);
 
   const handleClick = async () => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
@@ -18,10 +38,8 @@ function App() {
       if (currentUrl) {
         const videoId = getVideoId(currentUrl);
         if (videoId) {
-          const comments = await getComments(videoId);
-          setComments(comments);
-          const results = await getSentimentResults(comments);
-          setSentimentResults(results);
+          const data = await getYoutubeSentiment({ videoId: videoId });
+          setSentimentResults(data);
         } else {
           setValid(false);
         }
@@ -30,31 +48,38 @@ function App() {
   };
 
   return (
-    <div className="App flex flex-col items-center justify-center gap-3">
-      <h1 className="text-3xl font-bold underline">Senti-Surfer</h1>
-      <button onClick={handleClick}>Analyze</button>
-      <div className="mt-4 flex flex-col gap-2">
-        <p className="font-bold">
-          {Object.keys(sentimentResults).length != 0 ? (
-            <>
-              <p>
-                Average Sentiment Score : {calculateAverage(sentimentResults)}
-              </p>
-              <div className="w-96 h-96 bg-slate-400 flex items-center justify-center">
-                <BarChart test={sentimentResults} />
-              </div>
-            </>
-          ) : null}
-        </p>
-        {Object.keys(sentimentResults).map((result) => (
-          <div key={result} className="p-4 bg-gray-900 rounded-lg">
-            <h2 className="text-lg font-bold">{result}</h2>
-            <p className="mt-2">Score: {sentimentResults[result].compound}</p>
+    <div className="all font-def">
+      <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 h-16">
+        <div className="title flex gap-2 items-center font-black text-lg">
+          <div className="logo w-7 h-7"></div>
+          <div>Senti-Surfer</div>
+        </div>
+        <div className="extras flex gap-3 items-center">
+          <label className="switch">
+            <input type="checkbox"></input>
+            <span className="slider"></span>
+          </label>
+          <ArrowDownOnSquareIcon className="w-7 h-7 hover:cursor-pointer" />
+        </div>
+      </nav>
+      <main className="h-96 flex items-center justify-center flex-col gap-3">
+        {valid ? (
+          <div className="test border border-dashed border-green-400 p-4 text-green-500 rounded-2xl flex gap-2 items-center">
+            <CheckCircleIcon className="w-8 h-8" />
+            Ready for analysis.
           </div>
-        ))}
-      </div>
+        ) : (
+          <div className="test border border-dashed border-red-400 p-4 text-red-500 rounded-2xl flex gap-2 items-center">
+            <ExclamationCircleIcon className="w-8 h-8" />
+            No cotent available for analysis.
+          </div>
+        )}
 
-      {!valid && <p className="text-red-700">Not a valid youtube video</p>}
+        <button className="flex items-center justify-center gap-2">
+          Analyse
+          <ChartBarIcon className="w-5 h-5" />
+        </button>
+      </main>
     </div>
   );
 }

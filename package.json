@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.17",
     "@nivo/bar": "^0.80.0",
     "@nivo/core": "^0.80.0",
     "@types/chrome": "^0.0.228",
