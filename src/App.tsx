@@ -1,9 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { SentimentResults } from "./types/sentimentresult";
-import { getSentimentResults } from "./services/getsentiment.service";
-import { getComments } from "./services/getcomments.service";
-import BarChart from "./components/BarChart";
+import {
+  ArrowDownOnSquareIcon,
+  ChartBarIcon,
+  ExclamationCircleIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline";
 import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
 
 function isValidYoutubeVideo(url: string) {
@@ -45,12 +48,38 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {valid ? (
-        <p className="text-red-500">Valid Shit</p>
-      ) : (
-        <p className="text-green-500">Invalid Shit</p>
-      )}
+    <div className="all font-def">
+      <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 h-16">
+        <div className="title flex gap-2 items-center font-black text-lg">
+          <div className="logo w-7 h-7"></div>
+          <div>Senti-Surfer</div>
+        </div>
+        <div className="extras flex gap-3 items-center">
+          <label className="switch">
+            <input type="checkbox"></input>
+            <span className="slider"></span>
+          </label>
+          <ArrowDownOnSquareIcon className="w-7 h-7 hover:cursor-pointer" />
+        </div>
+      </nav>
+      <main className="h-96 flex items-center justify-center flex-col gap-3">
+        {valid ? (
+          <div className="test border border-dashed border-green-400 p-4 text-green-500 rounded-2xl flex gap-2 items-center">
+            <CheckCircleIcon className="w-8 h-8" />
+            Ready for analysis.
+          </div>
+        ) : (
+          <div className="test border border-dashed border-red-400 p-4 text-red-500 rounded-2xl flex gap-2 items-center">
+            <ExclamationCircleIcon className="w-8 h-8" />
+            No cotent available for analysis.
+          </div>
+        )}
+
+        <button className="flex items-center justify-center gap-2">
+          Analyse
+          <ChartBarIcon className="w-5 h-5" />
+        </button>
+      </main>
     </div>
   );
 }
