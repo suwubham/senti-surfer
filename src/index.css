@@ -3,19 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: rgb(194, 188, 188);
-}
-
 .all {
   width: 390px;
-  height: 570px;
+  height: 560px;
   background-color: #292937;
   max-height: 570px;
+  overflow-y: scroll;
 }
 
 nav {

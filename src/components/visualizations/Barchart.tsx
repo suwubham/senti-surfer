@@ -54,7 +54,7 @@ function format_data(data: SentimentResults) {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
+        label: "Sentiment Scores",
         data: [positive, negative, neutral],
         backgroundColor: "#fbca1f",
       },
