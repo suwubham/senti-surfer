@@ -5,10 +5,10 @@ import {
   ChartBarIcon,
   ExclamationCircleIcon,
   CheckCircleIcon,
+  ArrowDownOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
-// import Barchart from "./components/BarChart";
-import Navbar from "./components/Navbar";
+// import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
 
 function isValidYoutubeVideo(url: string) {
@@ -24,6 +24,16 @@ function App() {
   );
   const [currentTab, setCurrentTab] = useState<string | undefined>("");
   const [loading, setLoading] = useState<Boolean>(false);
+
+  const [theme, setTheme] = useState("dark");
+
+  const toggleTheme = () => {
+    theme === "dark" ? setTheme("light") : setTheme("dark");
+  };
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
@@ -47,8 +57,31 @@ function App() {
   };
 
   return (
-    <div className="all font-def">
-      <Navbar />
+    <div className={`App ${theme} all font-def`}>
+      {/* <Navbar theme={theme}/> */}
+
+      <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 h-16">
+        <div className="title flex gap-2 items-center font-black text-lg">
+          <div className="logo w-7 h-7"></div>
+          <div>Senti-Surfer</div>
+        </div>
+        <div className="extras flex gap-3 items-center">
+          <label className="switch">
+            <input type="checkbox" onClick={toggleTheme}></input>
+            <span className="slider"></span>
+          </label>
+          <ArrowDownOnSquareIcon className="w-7 h-7 hover:cursor-pointer" />
+        </div>
+      </nav>
+
+      <div className="yt-card">
+        <div className="yt-card__thumbnail"></div>
+        <div className="yt-card__title">
+          <h3 className="text-xl font-bold">Title</h3>
+          <p className="text-sm">Channel</p>
+        </div>
+      </div>
+
       <main className="h-96 flex items-center justify-center flex-col gap-5">
         {valid ? (
           <div className="test border border-dashed border-green-400 p-4 text-green-500 rounded-2xl flex gap-2 items-center">
