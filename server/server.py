@@ -19,10 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def get_sentiment(row):
-    if row["positive"] > 0:
+def get_sentiment(sentiment):
+    if sentiment['pos'] > 0:
         return "Positive"
-    if row["negative"] > 0:
+    if sentiment['neg'] > 0:
         return "Negative"
     else:
         return "Neutral"
@@ -46,10 +46,9 @@ def get_youtube_comments(videoId):
     for item in data['items']:
         comment = item['snippet']['topLevelComment']['snippet']
         comments.append({
-            comment['textDisplay']: {
-                'author': comment['authorDisplayName'],
-                'date': comment['publishedAt']
-            }
+            'textDisplay': comment['textDisplay'],
+            'author': comment['authorDisplayName'],
+            'date': comment['publishedAt']
         })
 
     return comments
@@ -58,21 +57,23 @@ def get_youtube_comments(videoId):
 def get_comments(videoId : dict):
     comments = get_youtube_comments(videoId["videoId"])
     sia = SentimentIntensityAnalyzer()
-    results = pd.DataFrame(columns=["positive", "negative", "neutral", "compound"])
+    results = []
     for comment in comments:
-        text = list(comment.keys())[0]
+        text = comment['textDisplay']
         sentiment = sia.polarity_scores(text)
-        results.loc[text] = [
-            sentiment['pos'],
-            sentiment['neg'],
-            sentiment['neu'],
-            sentiment['compound']
-        ]
-    results['compound'] = (results['compound'] + 1) * 50
-    results["sentiment"] = results.apply(get_sentiment, axis = 1)
+        result = {
+            'text': comment['textDisplay'],
+            'author': comment['author'],
+            'date': comment['date'],
+            'positive': sentiment['pos'],
+            'negative': sentiment['neg'],
+            'neutral': sentiment['neu'],
+            'compound': (sentiment['compound'] + 1) * 50,
+            'sentiment': get_sentiment(sentiment)
+        }
+        results.append(result)
     time.sleep(3)
-    results.to_csv("data.csv")
-    return results.to_dict(orient='index')
+    return results
 
 @app.post("/analyze-sentiment")
 def analyze_sentiment(sentences: List[str]):

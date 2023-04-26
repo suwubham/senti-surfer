@@ -7,9 +7,9 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
-// import Barchart from "./components/BarChart";
 import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
+import Barchart from "./components/visualizations/Barchart";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -20,7 +20,7 @@ function isValidYoutubeVideo(url: string) {
 function App() {
   const [valid, setValid] = useState<boolean>(true);
   const [sentimentResults, setSentimentResults] = useState<SentimentResults>(
-    {}
+    []
   );
   const [currentTab, setCurrentTab] = useState<string | undefined>("");
   const [loading, setLoading] = useState<Boolean>(false);
@@ -49,7 +49,8 @@ function App() {
   return (
     <div className="all font-def">
       <Navbar />
-      <main className="h-96 flex items-center justify-center flex-col gap-5">
+
+      <main className="flex items-center justify-center flex-col gap-5 py-5">
         {valid ? (
           <div className="test border border-dashed border-green-400 p-4 text-green-500 rounded-2xl flex gap-2 items-center">
             <CheckCircleIcon className="w-8 h-8" />
@@ -74,21 +75,14 @@ function App() {
 
         {loading && <Loader />}
 
-        {/* {Object.keys(sentimentResults).length > 0 && (
-          <Barchart test={sentimentResults} />
-        )} */}
+        {/* <Barchart /> */}
       </main>
+      {Object.keys(sentimentResults).length > 0 && (
+        <Barchart data={sentimentResults} />
+      )}
     </div>
   );
 }
-
-const calculateAverage = (sentimentResults: SentimentResults) => {
-  const total_compund = Object.keys(sentimentResults).reduce(
-    (acc, key) => acc + sentimentResults[key].compound,
-    0
-  );
-  return total_compund / Object.keys(sentimentResults).length;
-};
 
 const getVideoId = (url: string) => {
   const test_regex =

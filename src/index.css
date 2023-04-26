@@ -15,6 +15,7 @@ body {
   width: 390px;
   height: 570px;
   background-color: #292937;
+  max-height: 570px;
 }
 
 nav {
