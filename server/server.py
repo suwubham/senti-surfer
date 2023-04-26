@@ -3,10 +3,10 @@ from fastapi import FastAPI
 from nltk.sentiment import SentimentIntensityAnalyzer
 from fastapi.middleware.cors import CORSMiddleware
 import requests
-from pydantic import BaseModel
 import pandas as pd
 from dotenv import load_dotenv
 import os
+import time
 
 app = FastAPI()
 load_dotenv()
@@ -70,6 +70,7 @@ def get_comments(videoId : dict):
         ]
     results['compound'] = (results['compound'] + 1) * 50
     results["sentiment"] = results.apply(get_sentiment, axis = 1)
+    time.sleep(3)
     results.to_csv("data.csv")
     return results.to_dict(orient='index')
 
@@ -87,5 +88,6 @@ def analyze_sentiment(sentences: List[str]):
         ]
     results['compound'] = (results['compound'] + 1) * 50
     results["sentiment"] = results.apply(get_sentiment, axis = 1)
+
     results.to_csv("data.csv")
     return results.to_dict(orient='index')
