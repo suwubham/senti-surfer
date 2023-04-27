@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from nltk.sentiment import SentimentIntensityAnalyzer
 from fastapi.middleware.cors import CORSMiddleware
 import requests
-import pandas as pd
 from dotenv import load_dotenv
 import os
 import time
@@ -58,7 +57,7 @@ def get_youtube_comments(videoId):
 def get_channel_location(channelId):
     base_url = 'https://www.googleapis.com/youtube/v3/channels'
     params = {
-        'key': "AIzaSyDqpUDGVMjum1LPu5XLGcK_k9sDhP41WS8",
+        'key': os.getenv("YTAPI_KEY"),
         "part": "snippet",
         "id": channelId
     }
