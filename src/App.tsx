@@ -43,7 +43,6 @@ function App() {
 
   const handleClick = async () => {
     const videoId = getVideoId(currentTab!);
-    console.log(videoId);
     if (videoId) {
       setLoading(true);
       const sentimentResults = await getYoutubeSentiment({ videoId: videoId });

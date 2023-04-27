@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import App from "../App";
 import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 
 export default function Navbar(props: { theme: string; setTheme: any }) {
