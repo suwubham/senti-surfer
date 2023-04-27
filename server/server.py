@@ -45,13 +45,34 @@ def get_youtube_comments(videoId):
     data = response.json()
     for item in data['items']:
         comment = item['snippet']['topLevelComment']['snippet']
+        print(comment)
         comments.append({
             'textDisplay': comment['textDisplay'],
             'author': comment['authorDisplayName'],
-            'date': comment['publishedAt']
+            'date': comment['publishedAt'],
+            'channelId': comment['authorChannelId']['value']
         })
 
     return comments
+
+def get_channel_location(channelId):
+    base_url = 'https://www.googleapis.com/youtube/v3/channels'
+    params = {
+        'key': "AIzaSyDqpUDGVMjum1LPu5XLGcK_k9sDhP41WS8",
+        "part": "snippet",
+        "id": channelId
+    }
+
+    response = requests.get(base_url, params=params)
+    # Check if the response was successful
+    try:
+        if response.status_code == 200:
+            location = response.json()["items"][0]["snippet"]["country"]
+            return location
+        else:
+            return "Null"
+    except:
+        return "Null"
 
 @app.post("/analyze-youtube-comments")
 def get_comments(videoId : dict):
@@ -69,26 +90,9 @@ def get_comments(videoId : dict):
             'negative': sentiment['neg'],
             'neutral': sentiment['neu'],
             'compound': (sentiment['compound'] + 1) * 50,
-            'sentiment': get_sentiment(sentiment)
+            'sentiment': get_sentiment(sentiment),
+            'channelId':comment['channelId'],
+            'location':get_channel_location(comment['channelId'])
         }
         results.append(result)
-    time.sleep(3)
     return results
-
-@app.post("/analyze-sentiment")
-def analyze_sentiment(sentences: List[str]):
-    sia = SentimentIntensityAnalyzer()
-    results = pd.DataFrame(columns=["positive", "negative", "neutral", "compound"])
-    for sentence in sentences:
-        sentiment = sia.polarity_scores(sentence)
-        results.loc[sentence] = [
-            sentiment['pos'],
-            sentiment['neg'],
-            sentiment['neu'],
-            sentiment['compound']
-        ]
-    results['compound'] = (results['compound'] + 1) * 50
-    results["sentiment"] = results.apply(get_sentiment, axis = 1)
-
-    results.to_csv("data.csv")
-    return results.to_dict(orient='index')
