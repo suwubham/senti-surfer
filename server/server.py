@@ -9,7 +9,7 @@ import os
 import time
 
 app = FastAPI()
-load_dotenv()
+load_dotenv() 
 
 app.add_middleware(
     CORSMiddleware,
