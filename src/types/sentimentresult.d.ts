@@ -1,10 +1,11 @@
 interface Sentiment {
+  text: string;
+  author: string;
+  date: string;
   positive: number;
   negative: number;
   neutral: number;
   compound: number;
+  sentiment: string;
 }
-
-export interface SentimentResults {
-  [key: string]: Sentiment;
-}
+export type SentimentResults = Sentiment[];
