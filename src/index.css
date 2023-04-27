@@ -11,8 +11,19 @@
   overflow-y: scroll;
 }
 
+.dark{
+  background-color: #292937;
+  color: #fff;
+}
+  
+.light {
+  background-color: #fff;
+  color: #000;
+}
+
 nav {
   background: #303041;
+  position:fixed;
 }
 
 .logo {
@@ -73,6 +84,26 @@ input:checked + .slider:before {
   box-shadow: inset 15px -4px 0px 15px #fff000;
 }
 
+.yt-card{
+  display: flex;
+  margin-top: 75px;
+  padding: 10px;
+}
+
+.yt-card__thumbnail{
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,0.1);
+  margin: 1px;
+  padding: 1px;
+  width: 100px;
+}
+
+.yt-card__title{
+  margin-left: 10px;
+  width: 100%;
+}
+
 button {
   background: #fbca1f;
   font-family: inherit;
@@ -94,7 +125,7 @@ button:active {
   box-shadow: 0.05em 0.05em;
 }
 
-.test {
+/* .test {
   background: #292937;
   box-shadow: inset 20px 20px 60px #23232f, inset -20px -20px 60px #2f2f3f;
-}
+} */

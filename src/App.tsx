@@ -29,6 +29,8 @@ function App() {
   const [loading, setLoading] = useState<Boolean>(false);
   const [avgSentiment, setAvgSentiment] = useState(0);
 
+  const [theme, setTheme] = useState("dark");
+
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       const currentUrl = tabs[0].url;
@@ -41,7 +43,6 @@ function App() {
 
   const handleClick = async () => {
     const videoId = getVideoId(currentTab!);
-    console.log(videoId);
     if (videoId) {
       setLoading(true);
       const sentimentResults = await getYoutubeSentiment({ videoId: videoId });
@@ -52,8 +53,16 @@ function App() {
   };
 
   return (
-    <div className="all font-def">
-      <Navbar />
+    <div className={`${theme} all font-def`}>
+      <Navbar theme={theme} setTheme={setTheme} />
+
+      <div className="yt-card">
+        <div className="yt-card__thumbnail"></div>
+        <div className="yt-card__title">
+          <h3 className="text-xl font-bold">Title</h3>
+          <p className="text-sm">Channel</p>
+        </div>
+      </div>
 
       <main className="flex items-center justify-center flex-col gap-5 py-5">
         {valid ? (
@@ -82,7 +91,7 @@ function App() {
       </main>
       {Object.keys(sentimentResults).length > 0 && (
         <div className="flex flex-col items-center justify-center gap-3">
-          <div className="test border border-dashed border-yellow-400 text-white p-4 rounded-2xl flex gap-2 items-center">
+          <div className="test border border-dashed border-yellow-400 p-4 rounded-2xl flex gap-2 items-center">
             {avgSentiment > 50 ? (
               <FaceSmileIcon className="w-5 h-5" />
             ) : (
