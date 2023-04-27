@@ -2,12 +2,14 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { SentimentResults } from "./types/sentimentresult";
 import {
-  ArrowDownOnSquareIcon,
   ChartBarIcon,
   ExclamationCircleIcon,
   CheckCircleIcon,
+  ArrowDownOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
+// import Navbar from "./components/Navbar";
+import Loader from "./components/Loader";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -16,11 +18,22 @@ function isValidYoutubeVideo(url: string) {
 }
 
 function App() {
-  const [valid, setValid] = useState<boolean>(false);
+  const [valid, setValid] = useState<boolean>(true);
   const [sentimentResults, setSentimentResults] = useState<SentimentResults>(
     {}
   );
   const [currentTab, setCurrentTab] = useState<string | undefined>("");
+  const [loading, setLoading] = useState<Boolean>(false);
+
+  const [theme, setTheme] = useState("dark");
+
+  const toggleTheme = () => {
+    theme === "dark" ? setTheme("light") : setTheme("dark");
+  };
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
@@ -33,22 +46,20 @@ function App() {
   }, []);
 
   const handleClick = async () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      const currentUrl = tabs[0].url;
-      if (currentUrl) {
-        const videoId = getVideoId(currentUrl);
-        if (videoId) {
-          const data = await getYoutubeSentiment({ videoId: videoId });
-          setSentimentResults(data);
-        } else {
-          setValid(false);
-        }
-      }
-    });
+    const videoId = getVideoId(currentTab!);
+    console.log(videoId);
+    if (videoId) {
+      setLoading(true);
+      const sentimentResults = await getYoutubeSentiment({ videoId: videoId });
+      setSentimentResults(sentimentResults);
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="all font-def">
+    <div className={`App ${theme} all font-def`}>
+      {/* <Navbar theme={theme}/> */}
+
       <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 h-16">
         <div className="title flex gap-2 items-center font-black text-lg">
           <div className="logo w-7 h-7"></div>
@@ -56,13 +67,22 @@ function App() {
         </div>
         <div className="extras flex gap-3 items-center">
           <label className="switch">
-            <input type="checkbox"></input>
+            <input type="checkbox" onClick={toggleTheme}></input>
             <span className="slider"></span>
           </label>
           <ArrowDownOnSquareIcon className="w-7 h-7 hover:cursor-pointer" />
         </div>
       </nav>
-      <main className="h-96 flex items-center justify-center flex-col gap-3">
+
+      <div className="yt-card">
+        <div className="yt-card__thumbnail"></div>
+        <div className="yt-card__title">
+          <h3 className="text-xl font-bold">Title</h3>
+          <p className="text-sm">Channel</p>
+        </div>
+      </div>
+
+      <main className="h-96 flex items-center justify-center flex-col gap-5">
         {valid ? (
           <div className="test border border-dashed border-green-400 p-4 text-green-500 rounded-2xl flex gap-2 items-center">
             <CheckCircleIcon className="w-8 h-8" />
@@ -71,14 +91,25 @@ function App() {
         ) : (
           <div className="test border border-dashed border-red-400 p-4 text-red-500 rounded-2xl flex gap-2 items-center">
             <ExclamationCircleIcon className="w-8 h-8" />
-            No cotent available for analysis.
+            No content available for analysis.
           </div>
         )}
 
-        <button className="flex items-center justify-center gap-2">
-          Analyse
-          <ChartBarIcon className="w-5 h-5" />
-        </button>
+        {valid && (
+          <button
+            className="flex items-center justify-center gap-2"
+            onClick={handleClick}
+          >
+            Analyse
+            <ChartBarIcon className="w-5 h-5" />
+          </button>
+        )}
+
+        {loading && <Loader />}
+
+        {/* {Object.keys(sentimentResults).length > 0 && (
+          <Barchart test={sentimentResults} />
+        )} */}
       </main>
     </div>
   );
