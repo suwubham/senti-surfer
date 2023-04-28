@@ -1,3 +1,130 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.all {
+  width: 390px;
+  height: 560px;
+  background-color: #292937;
+  max-height: 570px;
+  overflow-y: scroll;
+}
+
+.dark {
+  background-color: #292937;
+  color: #fff;
+}
+
+.light {
+  background-color: #fff;
+  color: #000;
+}
+
+nav {
+  background: #303041;
+  position: fixed;
+}
+
+.logo {
+  background-image: url(./assets/logo.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+
+.switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+}
+
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+
+.slider {
+  --background: #3f3f42;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background);
+  transition: 0.5s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.4em;
+  width: 1.4em;
+  border-radius: 50%;
+  left: 10%;
+  bottom: 15%;
+  box-shadow: inset 8px -4px 0px 0px #fff000;
+  background: var(--background);
+  transition: 0.5s;
+}
+
+input:checked + .slider {
+  background-color: #525253;
+}
+
+input:checked + .slider:before {
+  transform: translateX(100%);
+  box-shadow: inset 15px -4px 0px 15px #fff000;
+}
+
+.yt-card {
+  display: flex;
+  margin-top: 75px;
+  padding: 10px;
+}
+
+.yt-card__thumbnail {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  margin: 1px;
+  padding: 1px;
+  width: 100px;
+}
+
+.yt-card__title {
+  margin-left: 10px;
+  width: 100%;
+}
+
+button {
+  background: #fbca1f;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+}
+
+button:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.15em 0.15em;
+}
+
+button:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+} */
+
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -11,19 +138,8 @@
   overflow-y: scroll;
 }
 
-.dark{
-  background-color: #292937;
-  color: #fff;
-}
-  
-.light {
-  background-color: #fff;
-  color: #000;
-}
-
 nav {
   background: #303041;
-  position:fixed;
 }
 
 .logo {
@@ -84,26 +200,6 @@ input:checked + .slider:before {
   box-shadow: inset 15px -4px 0px 15px #fff000;
 }
 
-.yt-card{
-  display: flex;
-  margin-top: 75px;
-  padding: 10px;
-}
-
-.yt-card__thumbnail{
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 5px 0 rgba(0,0,0,0.1);
-  margin: 1px;
-  padding: 1px;
-  width: 100px;
-}
-
-.yt-card__title{
-  margin-left: 10px;
-  width: 100%;
-}
-
 button {
   background: #fbca1f;
   font-family: inherit;
@@ -125,7 +221,7 @@ button:active {
   box-shadow: 0.05em 0.05em;
 }
 
-/* .test {
+.test {
   background: #292937;
   box-shadow: inset 20px 20px 60px #23232f, inset -20px -20px 60px #2f2f3f;
-} */
+}

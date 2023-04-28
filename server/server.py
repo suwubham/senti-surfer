@@ -44,7 +44,6 @@ def get_youtube_comments(videoId):
     data = response.json()
     for item in data['items']:
         comment = item['snippet']['topLevelComment']['snippet']
-        print(comment)
         comments.append({
             'textDisplay': comment['textDisplay'],
             'author': comment['authorDisplayName'],

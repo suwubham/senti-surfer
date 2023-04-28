@@ -84,9 +84,14 @@ function averageMonthlyScores(data: SentimentResults) {
 
 function formatData(data: SentimentResults) {
   const averageScores = averageMonthlyScores(data);
-  console.log(averageScores);
-  const labels = Object.keys(averageScores);
-  const scores = Object.values(averageScores);
+  const sortedKeys = Object.keys(averageScores).sort();
+  const sortedObject: any = {};
+  for (let key of sortedKeys) {
+    sortedObject[key] = averageScores[key];
+  }
+  console.log(sortedObject);
+  const labels = Object.keys(sortedObject);
+  const scores = Object.values(sortedObject);
   return {
     labels,
     datasets: [
