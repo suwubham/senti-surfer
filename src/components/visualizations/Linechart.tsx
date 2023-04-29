@@ -60,7 +60,6 @@ export const dataa = {
 
 export default function LineChart({ data }: { data: SentimentResults }) {
   const formattedData = formatData(data);
-  console.log(formattedData);
   return <Line options={options} data={formattedData} />;
 }
 
@@ -89,7 +88,6 @@ function formatData(data: SentimentResults) {
   for (let key of sortedKeys) {
     sortedObject[key] = averageScores[key];
   }
-  console.log(sortedObject);
   const labels = Object.keys(sortedObject);
   const scores = Object.values(sortedObject);
   return {

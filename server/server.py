@@ -1,11 +1,10 @@
-from typing import List
 from fastapi import FastAPI
 from nltk.sentiment import SentimentIntensityAnalyzer
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from dotenv import load_dotenv
 import os
-import time
+import pycountry
 
 app = FastAPI()
 load_dotenv() 
@@ -66,7 +65,8 @@ def get_channel_location(channelId):
     try:
         if response.status_code == 200:
             location = response.json()["items"][0]["snippet"]["country"]
-            return location
+            iso3 = pycountry.countries.get(alpha_2=location).alpha_3
+            return iso3
         else:
             return "Null"
     except:

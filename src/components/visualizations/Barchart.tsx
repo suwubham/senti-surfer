@@ -61,7 +61,5 @@ function format_data(data: SentimentResults) {
     ],
   };
 
-  console.log(formatted_data);
-
   return formatted_data;
 }

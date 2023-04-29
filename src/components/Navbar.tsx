@@ -5,7 +5,6 @@ import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 export default function Navbar(props: { theme: string; setTheme: any }) {
   const toggleTheme = () => {
     props.theme === "dark" ? props.setTheme("light") : props.setTheme("dark");
-    console.log("hello");
   };
 
   return (

@@ -131,7 +131,7 @@ button:active {
 @tailwind utilities;
 
 .all {
-  width: 390px;
+  width: 490px;
   height: 560px;
   background-color: #292937;
   max-height: 570px;

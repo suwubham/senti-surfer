@@ -7,5 +7,6 @@ interface Sentiment {
   neutral: number;
   compound: number;
   sentiment: string;
+  location: string;
 }
 export type SentimentResults = Sentiment[];
