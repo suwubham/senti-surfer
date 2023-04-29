@@ -8,7 +8,7 @@ export default function Navbar(props: { theme: string; setTheme: any }) {
   };
 
   return (
-    <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 h-16">
+    <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 py-4">
       <div className="title flex gap-2 items-center font-black text-lg">
         <div className="logo w-7 h-7"></div>
         <div>Senti-Surfer</div>

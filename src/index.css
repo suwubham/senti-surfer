@@ -221,7 +221,7 @@ button:active {
   box-shadow: 0.05em 0.05em;
 }
 
-.test {
+.dark-bs {
   background: #292937;
   box-shadow: inset 20px 20px 60px #23232f, inset -20px -20px 60px #2f2f3f;
 }
