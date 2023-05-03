@@ -86,7 +86,7 @@ def get_yt_details(videoId : dict):
         thumbnail_url = data['items'][0]['snippet']['thumbnails']['medium']['url']
         uploader_name = data['items'][0]['snippet']['channelTitle']
         title = data['items'][0]['snippet']['title']
-
+        view_count = data['items'][0]['statistics'].get('viewCount', 'N/A')
         photo_url = data['items'][0]['snippet']['thumbnails']['default']['url']
         likes_count = data['items'][0]['statistics'].get('likeCount', 'N/A')
         comments_count = data['items'][0]['statistics'].get('commentCount', 'N/A')
@@ -96,7 +96,9 @@ def get_yt_details(videoId : dict):
             "uploader_name": uploader_name,
             "photo_url": photo_url,
             "likes_count": likes_count,
-            "comments_count": comments_count
+            "comments_count": comments_count,
+            "title": title,
+            "view_count": view_count,
         }
         
     else:
