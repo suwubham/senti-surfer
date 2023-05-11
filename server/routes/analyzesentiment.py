@@ -4,9 +4,13 @@ from dotenv import load_dotenv
 import os
 import pycountry
 from nltk.sentiment import SentimentIntensityAnalyzer
+from config.db import db
+import datetime
+sia = SentimentIntensityAnalyzer()
 
 load_dotenv() 
 route_analyzeytsentiment = APIRouter()
+
 def get_sentiment(sentiment):
     if sentiment['pos'] > 0:
         return "Positive"
@@ -23,7 +27,7 @@ def get_youtube_comments(videoId):
         'videoId': videoId,
         'key': os.getenv("YTAPI_KEY"),
         'textFormat': 'plainText',
-        'maxResults': 100
+        'maxResults': 5
     }
 
     response = requests.get(base_url, params=params)
@@ -60,12 +64,24 @@ def get_channel_location(channelId):
             return "Null"
     except:
         return "Null"
+
+def days_between(d1,d2):
+    d1 = datetime.datetime.strptime(d1, "%Y-%m-%d")
+    d2 = datetime.datetime.strptime(d2, "%Y-%m-%d")
+    return abs((d2 - d1).days)
     
 @route_analyzeytsentiment.post("/analyze-youtube-comments")
 def get_comments(videoId : dict):
+    previous_data = db["comments"].find_one({"videoId":videoId["videoId"]})
+    if previous_data is not None:
+        if days_between(previous_data["analysed_date"], datetime.date.today().strftime("%Y-%m-%d")) < 3:
+            return previous_data["data"]
+        else:
+            db["comments"].delete_one({"videoId":videoId["videoId"]})
+        
     comments = get_youtube_comments(videoId["videoId"])
-    sia = SentimentIntensityAnalyzer()
     results = []
+    
     for comment in comments:
         text = comment['textDisplay']
         sentiment = sia.polarity_scores(text)
@@ -82,4 +98,6 @@ def get_comments(videoId : dict):
             'location':get_channel_location(comment['channelId'])
         }
         results.append(result)
+    formatted_data = {"videoId" : videoId["videoId"], "data" : results, "analysed_date" : datetime.date.today().strftime("%Y-%m-%d")}
+    db["comments"].insert_one(formatted_data)
     return results
