@@ -1,4 +1,8 @@
-import React from "react";
+import {
+  ChatBubbleBottomCenterIcon,
+  HandThumbUpIcon,
+  EyeIcon,
+} from "@heroicons/react/24/outline";
 
 function YoutubeCard({ videoDetails }: any) {
   return (
@@ -17,15 +21,15 @@ function YoutubeCard({ videoDetails }: any) {
               {videoDetails.title}
             </h2>
             <div className="flex items-center mt-1">
-              <span className="text-sm text-gray-700 mr-2">
-                <i className="fas fa-eye"></i> Views: {videoDetails.view_count}
+              <span className="text-sm text-gray-700 mr-2 flex">
+                <EyeIcon className="w-5 h-5" /> Views: {videoDetails.view_count}
               </span>
-              <span className="text-sm text-gray-700 mr-2">
-                <i className="fas fa-thumbs-up"></i> Likes:{" "}
+              <span className="text-sm text-gray-700 mr-2 flex">
+                <HandThumbUpIcon className="w-5 h-5" /> Likes:{" "}
                 {videoDetails.likes_count}
               </span>
-              <span className="text-sm text-gray-700">
-                <i className="fas fa-comment"></i> Comments:{" "}
+              <span className="text-sm text-gray-700 flex">
+                <ChatBubbleBottomCenterIcon className="w-5 h-5" /> Comments:{" "}
                 {videoDetails.comments_count}
               </span>
             </div>
