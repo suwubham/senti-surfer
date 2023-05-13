@@ -16,6 +16,7 @@ import Barchart from "./components/visualizations/Barchart";
 import Linechart from "./components/visualizations/Linechart";
 import Choroplethmap from "./components/visualizations/Choroplethmap";
 import YoutubeCard from "./components/YoutubeCard";
+import WordCloud from "./components/visualizations/WordCloud";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -70,6 +71,7 @@ function App() {
   return (
     <div className={`${theme} all font-def flex flex-col`}>
       <Navbar theme={theme} setTheme={setTheme} />
+
       {valid && <YoutubeCard videoDetails={videoDetails} />}
 
       {!analysed && (
@@ -119,6 +121,7 @@ function App() {
             <Barchart data={sentimentResults} />
             <Linechart data={sentimentResults} />
             <Choroplethmap data={sentimentResults} />
+            <WordCloud data={sentimentResults} />
           </div>
         </div>
       )}

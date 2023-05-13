@@ -148,6 +148,14 @@ nav {
   background-size: 100%;
 }
 
+.banner {
+  background-image: url(./assets/banner.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 100%;
+  height: 100%;
+}
+
 /* The switch - the box around the slider */
 .switch {
   font-size: 17px;

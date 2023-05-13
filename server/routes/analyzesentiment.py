@@ -8,6 +8,8 @@ from config.db import db
 import datetime
 sia = SentimentIntensityAnalyzer()
 
+
+
 load_dotenv() 
 route_analyzeytsentiment = APIRouter()
 
@@ -27,7 +29,7 @@ def get_youtube_comments(videoId):
         'videoId': videoId,
         'key': os.getenv("YTAPI_KEY"),
         'textFormat': 'plainText',
-        'maxResults': 5
+        'maxResults': 100
     }
 
     response = requests.get(base_url, params=params)
@@ -95,7 +97,8 @@ def get_comments(videoId : dict):
             'compound': (sentiment['compound'] + 1) * 50,
             'sentiment': get_sentiment(sentiment),
             'channelId':comment['channelId'],
-            'location':get_channel_location(comment['channelId'])
+            'location':get_channel_location(comment['channelId']),
+            
         }
         results.append(result)
     formatted_data = {"videoId" : videoId["videoId"], "data" : results, "analysed_date" : datetime.date.today().strftime("%Y-%m-%d")}
