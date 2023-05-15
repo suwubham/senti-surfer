@@ -25,10 +25,6 @@ export const options = {
     legend: {
       position: "top" as const,
     },
-    title: {
-      display: true,
-      text: "Bar Chart",
-    },
   },
 };
 
@@ -41,13 +37,13 @@ export default function Chart({ data }: { data: SentimentResults }) {
 
 function format_data(data: SentimentResults) {
   const positive = data.filter(
-    (comment) => comment["sentiment"] === "Positive"
+    (comment) => comment["sentiment"] === "positive"
   ).length;
   const negative = data.filter(
-    (comment) => comment["sentiment"] === "Negative"
+    (comment) => comment["sentiment"] === "negative"
   ).length;
   const neutral = data.filter(
-    (comment) => comment["sentiment"] === "Neutral"
+    (comment) => comment["sentiment"] === "neutral"
   ).length;
 
   const formatted_data = {

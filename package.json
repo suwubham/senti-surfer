@@ -20,7 +20,8 @@
     "react-chartjs-2": "^5.2.0",
     "react-d3-cloud": "^1.0.6",
     "react-dom": "^18.2.0",
-    "react-simple-maps": "^3.0.0"
+    "react-simple-maps": "^3.0.0",
+    "react-wordcloud": "^1.2.7"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

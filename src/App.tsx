@@ -17,6 +17,7 @@ import Linechart from "./components/visualizations/Linechart";
 import Choroplethmap from "./components/visualizations/Choroplethmap";
 import YoutubeCard from "./components/YoutubeCard";
 import WordCloud from "./components/visualizations/WordCloud";
+import RadarChart from "./components/visualizations/Radarchart";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -54,6 +55,15 @@ function App() {
         }
       }
     });
+    // async function getVideoDetails() {
+    //   let currentUrl = "https://www.youtube.com/watch?v=PL6rh25Apos";
+    //   setCurrentTab(currentUrl);
+    //   const videoId = getVideoId(currentUrl);
+    //   //@ts-ignore
+    //   const videoDetails = await getYoutubeDetails({ videoId: videoId });
+    //   setVideoDetails(videoDetails);
+    // }
+    // getVideoDetails();
   }, []);
 
   const handleClick = async () => {
@@ -105,7 +115,7 @@ function App() {
         <div className="flex flex-col m-5">
           <div className="flex items-center justify-center">
             <div
-              className={`dark-bs border-2 border-dashed p-4 ${
+              className={`dark-bs border-2 border-dashed p-4 mb-10 ${
                 avgSentiment > 50 ? "border-green-400" : "border-red-400"
               } rounded-2xl flex gap-2 items-center text-white justify-center text-lg`}
             >
@@ -117,11 +127,28 @@ function App() {
               Average Sentiment Score : {Math.round(avgSentiment)}
             </div>
           </div>
-          <div>
-            <Barchart data={sentimentResults} />
-            <Linechart data={sentimentResults} />
-            <Choroplethmap data={sentimentResults} />
-            <WordCloud data={sentimentResults} />
+
+          <div className="visualizations">
+            <div className="p-3 viz-card">
+              <p className="text-gray-400 text-center m-3">Bar Chart</p>
+              <Barchart data={sentimentResults} />
+            </div>
+            <div className="p-3 viz-card">
+              <p className="text-gray-400 text-center m-3">Line Chart</p>
+              <Linechart data={sentimentResults} />
+            </div>
+            <div className="p-3 viz-card">
+              <p className="text-gray-400 text-center m-3">Choropleth Map</p>
+              <Choroplethmap data={sentimentResults} />
+            </div>
+            <div className="p-3 viz-card">
+              <p className="text-gray-400 text-center m-3">Word Cloud</p>
+              <WordCloud data={sentimentResults} />
+            </div>
+            <div className="p-3 viz-card">
+              <p className="text-gray-400 text-center m-3">Pie Chart</p>
+              <RadarChart data={sentimentResults} />
+            </div>
           </div>
         </div>
       )}

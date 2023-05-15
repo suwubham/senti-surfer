@@ -3,12 +3,13 @@ import requests
 from dotenv import load_dotenv
 import os
 import pycountry
-from nltk.sentiment import SentimentIntensityAnalyzer
+
 from config.db import db
 import datetime
-sia = SentimentIntensityAnalyzer()
+from transformers import pipeline
 
-
+emotion_classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
+sentiment_analyzer = pipeline('sentiment-analysis', model="cardiffnlp/twitter-roberta-base-sentiment", return_all_scores=True)
 
 load_dotenv() 
 route_analyzeytsentiment = APIRouter()
@@ -71,7 +72,7 @@ def days_between(d1,d2):
     d1 = datetime.datetime.strptime(d1, "%Y-%m-%d")
     d2 = datetime.datetime.strptime(d2, "%Y-%m-%d")
     return abs((d2 - d1).days)
-    
+
 @route_analyzeytsentiment.post("/analyze-youtube-comments")
 def get_comments(videoId : dict):
     previous_data = db["comments"].find_one({"videoId":videoId["videoId"]})
@@ -80,25 +81,41 @@ def get_comments(videoId : dict):
             return previous_data["data"]
         else:
             db["comments"].delete_one({"videoId":videoId["videoId"]})
-        
+    
     comments = get_youtube_comments(videoId["videoId"])
     results = []
     
     for comment in comments:
-        text = comment['textDisplay']
-        sentiment = sia.polarity_scores(text)
+        text = comment['textDisplay'][:500]
+        print(text)
+
+        data = emotion_classifier(text)[0]
+        senti = sentiment_analyzer(text)[0]
+        
+        senti_scores = {}
+        senti_scores["positive"] = [label['score'] for label in senti if label['label'] == 'LABEL_2'][0]
+        senti_scores["neutral"] = [label['score'] for label in senti if label['label'] == 'LABEL_1'][0]
+        senti_scores["negative"] = [label['score'] for label in senti if label['label'] == 'LABEL_0'][0]
+        senti_scores["compound"] = (senti_scores["positive"] - senti_scores["negative"]) / (senti_scores["positive"] + senti_scores["negative"] + senti_scores["neutral"])
+
         result = {
             'text': comment['textDisplay'],
             'author': comment['author'],
             'date': comment['date'],
-            'positive': sentiment['pos'],
-            'negative': sentiment['neg'],
-            'neutral': sentiment['neu'],
-            'compound': (sentiment['compound'] + 1) * 50,
-            'sentiment': get_sentiment(sentiment),
+            'positive': senti_scores["positive"],
+            'negative': senti_scores["negative"],
+            'neutral': senti_scores["neutral"],
+            'compound': (senti_scores["compound"] + 1) * 50,
+            'sentiment': max(senti_scores, key=senti_scores.get),
             'channelId':comment['channelId'],
+            'anger' : data[0]["score"],
+            'disgust' : data[1]["score"],
+            'fear' : data[2]["score"],
+            'joy' : data[3]["score"],
+            'neutral' : data[4]["score"],
+            'sadness' : data[5]["score"],
+            'surprise' : data[6]["score"],
             'location':get_channel_location(comment['channelId']),
-            
         }
         results.append(result)
     formatted_data = {"videoId" : videoId["videoId"], "data" : results, "analysed_date" : datetime.date.today().strftime("%Y-%m-%d")}

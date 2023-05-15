@@ -1,5 +1,5 @@
 import React from "react";
-import WordCloud from "react-d3-cloud";
+import ReactWordcloud from "react-wordcloud";
 import { SentimentResults } from "../../types/sentimentresult";
 
 function prepareForWordCloud(paragraph: string) {
@@ -65,47 +65,35 @@ function countWords(arr: any) {
 }
 
 export default function Cloud({ data }: { data: SentimentResults }) {
-  console.log(data);
-
   let text = "";
   data.map((item) => {
     text += item.text + " ";
   });
 
-  console.log(text);
-
   const result = prepareForWordCloud(text);
-
-  console.log(result);
 
   const datas = countWords(result);
 
-  console.log(datas);
-
-  // const datas = [
-  //   { text: "Hey", value: 1000 },
-  //   { text: "lol", value: 200 },
-  //   { text: "first impression", value: 800 },
-  //   { text: "very cool", value: 100 },
-  //   { text: "duck", value: 10 },
-  // ];
-
   const callbacks = {
-    getWordColor: (word) => (word.value > 50 ? "blue" : "red"),
+    getWordColor: (word: any) => (word.value > 50 ? "blue" : "red"),
     onWordClick: console.log,
     onWordMouseOver: console.log,
-    getWordTooltip: (word) =>
+    getWordTooltip: (word: any) =>
       `${word.text} (${word.value}) [${word.value > 50 ? "good" : "bad"}]`,
   };
-  
+
   const options = {
     rotations: 2,
     rotationAngles: [-90, 0],
   };
-  
-  const size = [600, 400];
 
+  const size = [450, 400];
 
-  return <ReactWordcloud size={size} words={words} />;
+  return (
+    <ReactWordcloud
+      //@ts-ignore
+      size={size}
+      words={datas.sort((a, b) => b.value - a.value).slice(0, 70)}
+    />
   );
 }
