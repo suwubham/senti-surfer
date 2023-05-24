@@ -101,7 +101,7 @@ def get_comments(videoId : dict):
         result = {
             'text': comment['textDisplay'],
             'author': comment['author'],
-            'date': comment['date'],
+            'date': comment['date'][:10],
             'positive': senti_scores["positive"],
             'negative': senti_scores["negative"],
             'neutral': senti_scores["neutral"],
@@ -112,7 +112,7 @@ def get_comments(videoId : dict):
             'disgust' : data[1]["score"],
             'fear' : data[2]["score"],
             'joy' : data[3]["score"],
-            'neutral' : data[4]["score"],
+            'neutral_emotion' : data[4]["score"],
             'sadness' : data[5]["score"],
             'surprise' : data[6]["score"],
             'location':get_channel_location(comment['channelId']),

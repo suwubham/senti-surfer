@@ -14,7 +14,9 @@ def get_yt_details(videoId : dict):
         'part': 'snippet,statistics',
         'id': videoId["videoId"]
     }
+
     response = requests.get(base_url, params=params)
+    
     if response.status_code == 200:
         data = response.json()
         thumbnail_url = data['items'][0]['snippet']['thumbnails']['medium']['url']
