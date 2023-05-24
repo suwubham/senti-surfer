@@ -1,13 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { SentimentResults } from "./types/sentimentresult";
-import {
-  ChartBarIcon,
-  ExclamationCircleIcon,
-  CheckCircleIcon,
-  FaceSmileIcon,
-  FaceFrownIcon,
-} from "@heroicons/react/24/outline";
+import { FaceSmileIcon, FaceFrownIcon } from "@heroicons/react/24/outline";
 import { getYoutubeSentiment } from "./services/youtubeanalysis.service";
 import { getYoutubeDetails } from "./services/youtubedetails.service";
 import Navbar from "./components/Navbar";
@@ -40,33 +34,33 @@ function App() {
   const [videoDetails, setVideoDetails] = useState<any>({});
 
   useEffect(() => {
-    // chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-    //   const currentUrl = tabs[0].url;
-    //   setCurrentTab(currentUrl);
-    //   if (currentUrl) {
-    //     if (isValidYoutubeVideo(currentUrl)) {
-    //       setValid(true);
-    //       const videoId = getVideoId(currentUrl);
-    //       console.log(videoId);
-    //       if (videoId) {
-    //         const videoDetails = await getYoutubeDetails({ videoId: videoId });
-    //         setVideoDetails(videoDetails);
-    //       }
-    //     } else {
-    //       setValid(false);
-    //     }
-    //   }
-    // });
-    async function getVideoDetails() {
-      let currentUrl =
-        "https://www.youtube.com/watch?v=fjyc9XTtC2Q&list=RDfjyc9XTtC2Q&start_radio=1";
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+      const currentUrl = tabs[0].url;
       setCurrentTab(currentUrl);
-      const videoId = getVideoId(currentUrl);
-      //@ts-ignore
-      const videoDetails = await getYoutubeDetails({ videoId: videoId });
-      setVideoDetails(videoDetails);
-    }
-    getVideoDetails();
+      if (currentUrl) {
+        if (isValidYoutubeVideo(currentUrl)) {
+          setValid(true);
+          const videoId = getVideoId(currentUrl);
+          console.log(videoId);
+          if (videoId) {
+            const videoDetails = await getYoutubeDetails({ videoId: videoId });
+            setVideoDetails(videoDetails);
+          }
+        } else {
+          setValid(false);
+        }
+      }
+    });
+    // async function getVideoDetails() {
+    //   let currentUrl =
+    //     "https://www.youtube.com/watch?v=fjyc9XTtC2Q&list=RDfjyc9XTtC2Q&start_radio=1";
+    //   setCurrentTab(currentUrl);
+    //   const videoId = getVideoId(currentUrl);
+    //   //@ts-ignore
+    //   const videoDetails = await getYoutubeDetails({ videoId: videoId });
+    //   setVideoDetails(videoDetails);
+    // }
+    // getVideoDetails();
   }, []);
 
   const handleClick = async () => {
@@ -85,34 +79,16 @@ function App() {
     <div className={`${theme} all font-def flex flex-col`}>
       <Navbar theme={theme} setTheme={setTheme} />
 
-      {valid && <YoutubeCard videoDetails={videoDetails} />}
-
-      {!analysed && (
-        <main className="flex justify-center flex-col items-center grow gap-5">
-          {valid ? (
-            <div className="dark-bs border border-dashed border-green-400 p-4 text-green-500 rounded-2xl flex gap-2 items-center">
-              <CheckCircleIcon className="w-8 h-8" />
-              Ready for analysis.
-            </div>
-          ) : (
-            <div className="dark-bs border border-dashed border-red-400 p-4 text-red-500 rounded-2xl flex gap-2 items-center">
-              <ExclamationCircleIcon className="w-8 h-8" />
-              No content available for analysis.
-            </div>
-          )}
-
-          {valid && (
-            <button
-              className="flex items-center justify-center gap-2"
-              onClick={handleClick}
-            >
-              Analyse
-              <ChartBarIcon className="w-5 h-5" />
-            </button>
-          )}
-          <Tryitout />
-        </main>
+      {valid && (
+        <YoutubeCard
+          videoDetails={videoDetails}
+          analysed={analysed}
+          valid={valid}
+          handleClick={handleClick}
+        />
       )}
+
+      {!analysed && <Tryitout />}
       {loading && <Loader />}
 
       {Object.keys(sentimentResults).length > 0 && (
