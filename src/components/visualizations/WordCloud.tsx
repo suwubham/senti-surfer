@@ -74,14 +74,6 @@ export default function Cloud({ data }: { data: SentimentResults }) {
 
   const datas = countWords(result);
 
-  const callbacks = {
-    getWordColor: (word: any) => (word.value > 50 ? "blue" : "red"),
-    onWordClick: console.log,
-    onWordMouseOver: console.log,
-    getWordTooltip: (word: any) =>
-      `${word.text} (${word.value}) [${word.value > 50 ? "good" : "bad"}]`,
-  };
-
   const options = {
     rotations: 2,
     rotationAngles: [-90, 0],

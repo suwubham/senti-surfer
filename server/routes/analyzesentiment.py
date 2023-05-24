@@ -13,6 +13,7 @@ sentiment_analyzer = pipeline('sentiment-analysis', model="cardiffnlp/twitter-ro
 
 load_dotenv() 
 route_analyzeytsentiment = APIRouter()
+route_analyzesingle = APIRouter()
 
 def get_sentiment(sentiment):
     if sentiment['pos'] > 0:
@@ -73,6 +74,36 @@ def days_between(d1,d2):
     d2 = datetime.datetime.strptime(d2, "%Y-%m-%d")
     return abs((d2 - d1).days)
 
+
+@route_analyzesingle.post("/analyze-single")
+def analyze(text : dict):
+    text = text["text"]
+    data = emotion_classifier(text)[0]
+    senti = sentiment_analyzer(text)[0]
+    senti_scores = {}
+    senti_scores["positive"] = [label['score'] for label in senti if label['label'] == 'LABEL_2'][0]
+    senti_scores["neutral"] = [label['score'] for label in senti if label['label'] == 'LABEL_1'][0]
+    senti_scores["negative"] = [label['score'] for label in senti if label['label'] == 'LABEL_0'][0]
+    senti_scores["compound"] = (senti_scores["positive"] - senti_scores["negative"]) / (senti_scores["positive"] + senti_scores["negative"] + senti_scores["neutral"])
+
+    result = {
+        'positive': senti_scores["positive"],
+        'negative': senti_scores["negative"],
+        'neutral': senti_scores["neutral"],
+        'compound': (senti_scores["compound"] + 1) * 50,
+        'sentiment': max(senti_scores, key=senti_scores.get),
+        'anger' : data[0]["score"],
+        'disgust' : data[1]["score"],
+        'fear' : data[2]["score"],
+        'joy' : data[3]["score"],
+        'neutral_emotion' : data[4]["score"],
+        'sadness' : data[5]["score"],
+        'surprise' : data[6]["score"],
+    }
+    
+    return result
+
+
 @route_analyzeytsentiment.post("/analyze-youtube-comments")
 def get_comments(videoId : dict):
     previous_data = db["comments"].find_one({"videoId":videoId["videoId"]})
@@ -101,7 +132,7 @@ def get_comments(videoId : dict):
         result = {
             'text': comment['textDisplay'],
             'author': comment['author'],
-            'date': comment['date'],
+            'date': comment['date'][:10],
             'positive': senti_scores["positive"],
             'negative': senti_scores["negative"],
             'neutral': senti_scores["neutral"],
@@ -112,7 +143,7 @@ def get_comments(videoId : dict):
             'disgust' : data[1]["score"],
             'fear' : data[2]["score"],
             'joy' : data[3]["score"],
-            'neutral' : data[4]["score"],
+            'neutral_emotion' : data[4]["score"],
             'sadness' : data[5]["score"],
             'surprise' : data[6]["score"],
             'location':get_channel_location(comment['channelId']),
