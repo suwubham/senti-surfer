@@ -8,5 +8,13 @@ interface Sentiment {
   compound: number;
   sentiment: string;
   location: string;
+  country: string;
+  anger: number;
+  disgust: number;
+  fear: number;
+  joy: number;
+  sadness: number;
+  surprise: number;
+
 }
 export type SentimentResults = Sentiment[];

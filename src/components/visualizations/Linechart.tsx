@@ -10,7 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+
 import { SentimentResults } from "../../types/sentimentresult";
 
 ChartJS.register(
@@ -39,20 +39,6 @@ interface ScoresByMonth {
 interface averageScores {
   [date: string]: number;
 }
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const dataa = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-  ],
-};
 
 export default function LineChart({ data }: { data: SentimentResults }) {
   const formattedData = formatData(data);
@@ -84,8 +70,11 @@ function formatData(data: SentimentResults) {
   for (let key of sortedKeys) {
     sortedObject[key] = averageScores[key];
   }
-  const labels = Object.keys(sortedObject);
-  const scores = Object.values(sortedObject);
+
+  const entries = Object.entries(sortedObject);
+  const labels = entries.map(([key, value]) => key);
+  const scores = entries.map(([key, value]) => value);
+
   return {
     labels,
     datasets: [

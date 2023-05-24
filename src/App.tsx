@@ -18,6 +18,8 @@ import Choroplethmap from "./components/visualizations/Choroplethmap";
 import YoutubeCard from "./components/YoutubeCard";
 import WordCloud from "./components/visualizations/WordCloud";
 import RadarChart from "./components/visualizations/Radarchart";
+import MultiLine from "./components/visualizations/LineChart_emo";
+import Tryitout from "./components/Tryitout";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -38,32 +40,33 @@ function App() {
   const [videoDetails, setVideoDetails] = useState<any>({});
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      const currentUrl = tabs[0].url;
-      setCurrentTab(currentUrl);
-      if (currentUrl) {
-        if (isValidYoutubeVideo(currentUrl)) {
-          setValid(true);
-          const videoId = getVideoId(currentUrl);
-          console.log(videoId);
-          if (videoId) {
-            const videoDetails = await getYoutubeDetails({ videoId: videoId });
-            setVideoDetails(videoDetails);
-          }
-        } else {
-          setValid(false);
-        }
-      }
-    });
-    // async function getVideoDetails() {
-    //   let currentUrl = "https://www.youtube.com/watch?v=PL6rh25Apos";
+    // chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+    //   const currentUrl = tabs[0].url;
     //   setCurrentTab(currentUrl);
-    //   const videoId = getVideoId(currentUrl);
-    //   //@ts-ignore
-    //   const videoDetails = await getYoutubeDetails({ videoId: videoId });
-    //   setVideoDetails(videoDetails);
-    // }
-    // getVideoDetails();
+    //   if (currentUrl) {
+    //     if (isValidYoutubeVideo(currentUrl)) {
+    //       setValid(true);
+    //       const videoId = getVideoId(currentUrl);
+    //       console.log(videoId);
+    //       if (videoId) {
+    //         const videoDetails = await getYoutubeDetails({ videoId: videoId });
+    //         setVideoDetails(videoDetails);
+    //       }
+    //     } else {
+    //       setValid(false);
+    //     }
+    //   }
+    // });
+    async function getVideoDetails() {
+      let currentUrl =
+        "https://www.youtube.com/watch?v=fjyc9XTtC2Q&list=RDfjyc9XTtC2Q&start_radio=1";
+      setCurrentTab(currentUrl);
+      const videoId = getVideoId(currentUrl);
+      //@ts-ignore
+      const videoDetails = await getYoutubeDetails({ videoId: videoId });
+      setVideoDetails(videoDetails);
+    }
+    getVideoDetails();
   }, []);
 
   const handleClick = async () => {
@@ -107,6 +110,7 @@ function App() {
               <ChartBarIcon className="w-5 h-5" />
             </button>
           )}
+          <Tryitout />
         </main>
       )}
       {loading && <Loader />}
@@ -124,7 +128,7 @@ function App() {
               ) : (
                 <FaceFrownIcon className="w-5 h-5" />
               )}
-              Average Sentiment Score : {Math.round(avgSentiment)}
+              Weighted Positive Score : {Math.round(avgSentiment) + " %"}
             </div>
           </div>
 
@@ -148,6 +152,10 @@ function App() {
             <div className="p-3 viz-card">
               <p className="text-gray-400 text-center m-3">Pie Chart</p>
               <RadarChart data={sentimentResults} />
+            </div>
+            <div className="p-3 viz-card mt-4">
+              <p className="text-gray-400 text-center m-3">Emotion Trend</p>
+              <MultiLine data={sentimentResults} />
             </div>
           </div>
         </div>
