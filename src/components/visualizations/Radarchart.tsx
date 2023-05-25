@@ -63,6 +63,7 @@ export default function App({ data }: { data: SentimentResults }) {
       {
         label: "Percentage",
         data: [
+
           averageScores.anger * 100,
           averageScores.disgust * 100,
           averageScores.fear * 100,
@@ -70,6 +71,7 @@ export default function App({ data }: { data: SentimentResults }) {
           averageScores.sadness * 100,
           averageScores.surprise * 100,
           averageScores.neutral_emotion * 100,
+
         ],
         backgroundColor: "rgba(243, 201, 51, 0.2)",
         borderColor: "rgba(243, 201, 51)",
