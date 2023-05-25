@@ -71,7 +71,7 @@ export default function Navbar(props: {
         </label>
         {props.enable && (
           <DocumentArrowDownIcon
-            className="h-5 w-5"
+            className="h-7 w-7 hover:cursor-pointer"
             onClick={() => handleDownload("csv")}
           />
         )}
