@@ -42,14 +42,19 @@ export default function Navbar(props: {
     }
   };
 
-  function convertToCSV(data: any) {
+  function convertToCSV(data: any[]) {
     const headers = Object.keys(data[0]);
-    const rows = data.map((row: any) =>
-      headers.map((header: any) => row[header])
+    const rows = data.map((row) =>
+      headers.map((fieldName) => {
+        let fieldValue = row[fieldName];
+        if (typeof fieldValue === "string") {
+          fieldValue = `"${fieldValue}"`; // wrap in quotes if it's a string
+        }
+        return fieldValue;
+      })
     );
-    return [headers.join(","), ...rows.map((row: any) => row.join(","))].join(
-      "\n"
-    );
+    const csvData = [headers, ...rows].map((row) => row.join(",")).join("\n");
+    return csvData;
   }
 
   return (
