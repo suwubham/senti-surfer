@@ -14,6 +14,7 @@ import WordCloud from "./components/visualizations/WordCloud";
 import RadarChart from "./components/visualizations/Radarchart";
 import MultiLine from "./components/visualizations/LineChart_emo";
 import Tryitout from "./components/Tryitout";
+import banner from "./assets/banner.png";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -34,33 +35,33 @@ function App() {
   const [videoDetails, setVideoDetails] = useState<any>({});
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-      const currentUrl = tabs[0].url;
-      setCurrentTab(currentUrl);
-      if (currentUrl) {
-        if (isValidYoutubeVideo(currentUrl)) {
-          setValid(true);
-          const videoId = getVideoId(currentUrl);
-          console.log(videoId);
-          if (videoId) {
-            const videoDetails = await getYoutubeDetails({ videoId: videoId });
-            setVideoDetails(videoDetails);
-          }
-        } else {
-          setValid(false);
-        }
-      }
-    });
-    // async function getVideoDetails() {
-    //   let currentUrl =
-    //     "https://www.youtube.com/watch?v=fjyc9XTtC2Q&list=RDfjyc9XTtC2Q&start_radio=1";
+    // chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+    //   const currentUrl = tabs[0].url;
     //   setCurrentTab(currentUrl);
-    //   const videoId = getVideoId(currentUrl);
-    //   //@ts-ignore
-    //   const videoDetails = await getYoutubeDetails({ videoId: videoId });
-    //   setVideoDetails(videoDetails);
-    // }
-    // getVideoDetails();
+    //   if (currentUrl) {
+    //     if (isValidYoutubeVideo(currentUrl)) {
+    //       setValid(true);
+    //       const videoId = getVideoId(currentUrl);
+    //       console.log(videoId);
+    //       if (videoId) {
+    //         const videoDetails = await getYoutubeDetails({ videoId: videoId });
+    //         setVideoDetails(videoDetails);
+    //       }
+    //     } else {
+    //       setValid(false);
+    //     }
+    //   }
+    // });
+    async function getVideoDetails() {
+      let currentUrl =
+        "https://www.youtube.com/watch?v=fjyc9XTtC2Q&list=RDfjyc9XTtC2Q&start_radio=1";
+      setCurrentTab(currentUrl);
+      const videoId = getVideoId(currentUrl);
+      //@ts-ignore
+      const videoDetails = await getYoutubeDetails({ videoId: videoId });
+      setVideoDetails(videoDetails);
+    }
+    getVideoDetails();
   }, []);
 
   const handleClick = async () => {
@@ -141,6 +142,7 @@ function App() {
           </div>
         </div>
       )}
+      <img src={banner} alt="Banner" width="100%" height="40%" />
     </div>
   );
 }
