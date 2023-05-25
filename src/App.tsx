@@ -19,6 +19,7 @@ import WordCloud from "./components/visualizations/WordCloud";
 import RadarChart from "./components/visualizations/Radarchart";
 import MultiLine from "./components/visualizations/LineChart_emo";
 import Tryitout from "./components/Tryitout";
+import banner from "./assets/banner.png";
 
 function isValidYoutubeVideo(url: string) {
   const youtubeUrlPattern =
@@ -155,6 +156,7 @@ function App() {
           </div>
         </div>
       )}
+      <img src={banner} alt="Banner" width="100%" height="40%" />
     </div>
   );
 }
