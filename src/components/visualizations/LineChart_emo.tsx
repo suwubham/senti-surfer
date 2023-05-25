@@ -52,64 +52,39 @@ export default function MultiLine({ data }: { data: SentimentResults }) {
     datasets: [
       {
         label: "Anger",
-        data: labels.map(
-          (date) => data.find((item) => item.date === date)?.anger || 0
-        ),
+        data: labels.map((date) => {
+          const items = data.filter((item) => item.date === date);
+          const count = items.length;
+          const total = items.reduce((acc, item) => acc + item.anger, 0);
+          return count > 0 ? total / count : 0;
+        }),
         borderColor: "rgba(255,20,147,0.8)",
         backgroundColor: "rgba(255,20,147,0.8)",
       },
       {
         label: "Disgust",
-        data: labels.map(
-          (date) => data.find((item) => item.date === date)?.disgust || 0
-        ),
+        data: labels.map((date) => {
+          const items = data.filter((item) => item.date === date);
+          const count = items.length;
+          const total = items.reduce((acc, item) => acc + item.disgust, 0);
+          return count > 0 ? total / count : 0;
+        }),
         borderColor: "rgba(34,139,34,0.8)",
         backgroundColor: "rgba(34,139,34,0.8)",
       },
       {
         label: "Joy",
-        data: labels.map(
-          (date) => data.find((item) => item.date === date)?.joy || 0
-        ),
+        data: labels.map((date) => {
+          const items = data.filter((item) => item.date === date);
+          const count = items.length;
+          const total = items.reduce((acc, item) => acc + item.joy, 0);
+          return count > 0 ? total / count : 0;
+        }),
         borderColor: "rgba(67, 133, 213, 0.8)",
         backgroundColor: "rgba(67, 133, 213, 0.8)",
       },
     ],
   };
 
-  calculateAverageScores(data);
   return <Line options={options} data={datas} />;
-}
-
-function calculateAverageScores(data: SentimentResults) {
-  const scoresByDate: AverageScoresByDate = {};
-  data.forEach((item) => {
-    const { date, anger, disgust, joy } = item;
-    if (!scoresByDate[date]) {
-      scoresByDate[date] = {
-        anger: 0,
-        disgust: 0,
-        joy: 0,
-        count: 0,
-      };
-    }
-    scoresByDate[date].anger += anger || 0;
-    scoresByDate[date].disgust += disgust || 0;
-    scoresByDate[date].joy += joy || 0;
-    scoresByDate[date].count += 1;
-  });
-
-  const averageScores: any = {};
-  for (const date in scoresByDate) {
-    const { anger, disgust, joy, count } = scoresByDate[date];
-    averageScores[date] = {
-      anger: anger / count || 0,
-      disgust: disgust / count || 0,
-      joy: joy / count || 0,
-    };
-  }
-
-  console.log(averageScores);
-
-  return;
 }
