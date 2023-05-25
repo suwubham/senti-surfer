@@ -9,6 +9,7 @@ export default function Navbar(props: {
   theme: string;
   setTheme: any;
   data: any;
+  enable: boolean;
 }) {
   const toggleTheme = () => {
     props.theme === "dark" ? props.setTheme("light") : props.setTheme("dark");
@@ -68,14 +69,18 @@ export default function Navbar(props: {
           <input type="checkbox" onClick={toggleTheme}></input>
           <span className="slider"></span>
         </label>
-        <DocumentArrowDownIcon
-          className="h-5 w-5"
-          onClick={() => handleDownload("csv")}
-        />
-        <CodeBracketIcon
-          className="w-7 h-7 hover:cursor-pointer"
-          onClick={() => handleDownload("json")}
-        />
+        {props.enable && (
+          <DocumentArrowDownIcon
+            className="h-5 w-5"
+            onClick={() => handleDownload("csv")}
+          />
+        )}
+        {props.enable && (
+          <CodeBracketIcon
+            className="w-7 h-7 hover:cursor-pointer"
+            onClick={() => handleDownload("json")}
+          />
+        )}
       </div>
     </nav>
   );
