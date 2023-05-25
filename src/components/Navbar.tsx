@@ -7,6 +7,10 @@ export default function Navbar(props: { theme: string; setTheme: any }) {
     props.theme === "dark" ? props.setTheme("light") : props.setTheme("dark");
   };
 
+  const handleDownload = () => {
+    // Add your download logic here
+  };
+
   return (
     <nav className="nav w-full px-3 flex items-center justify-between text-gray-300 py-4 sticky top-0 z-50">
       <div className="title flex gap-2 items-center font-black text-lg">
@@ -18,6 +22,12 @@ export default function Navbar(props: { theme: string; setTheme: any }) {
           <input type="checkbox" onClick={toggleTheme}></input>
           <span className="slider"></span>
         </label>
+        <button
+          onClick={handleDownload}
+          style={{ color: "white", boxShadow: "0 0 5px black" }}
+        >
+          Download
+        </button>
         <ArrowDownOnSquareIcon className="w-7 h-7 hover:cursor-pointer" />
       </div>
     </nav>
