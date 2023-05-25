@@ -31,53 +31,6 @@ export const options = {
   },
 };
 
-var labels = [
-  "2022-02-11",
-  "2022-03-04",
-  "2022-05-12",
-  "2022-06-17",
-  "2022-07-23",
-  "2022-08-07",
-  "2022-09-09",
-  "2022-10-15",
-  "2022-11-28",
-  "2022-12-05",
-  "2023-01-02",
-  "2023-02-18",
-  "2023-03-29",
-  "2023-04-10",
-  "2023-05-03",
-  "2023-06-16",
-  "2023-07-30",
-  "2023-08-23",
-  "2023-09-21",
-  "2023-12-26",
-];
-
-export const datas = {
-  labels,
-  datasets: [
-    {
-      label: "Anger",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      borderColor: "rgba(255,20,147,0.8)",
-      backgroundColor: "rgba(255,20,147,0.8)",
-    },
-    {
-      label: "Disgust",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      borderColor: "rgba(34,139,34,0.8)",
-      backgroundColor: "rgba(34,139,34,0.8)",
-    },
-    {
-      label: "Joy",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      borderColor: "rgba(67, 133, 213, 0.8)",
-      backgroundColor: "rgba(67, 133, 213, 0.8)",
-    },
-  ],
-};
-
 interface AverageScores {
   anger: number;
   disgust: number;
@@ -90,6 +43,32 @@ interface AverageScoresByDate {
 }
 
 export default function MultiLine({ data }: { data: SentimentResults }) {
+  var labels = data.map((item) => item.date);
+
+  const datas = {
+    labels,
+    datasets: [
+      {
+        label: "Anger",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        borderColor: "rgba(255,20,147,0.8)",
+        backgroundColor: "rgba(255,20,147,0.8)",
+      },
+      {
+        label: "Disgust",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        borderColor: "rgba(34,139,34,0.8)",
+        backgroundColor: "rgba(34,139,34,0.8)",
+      },
+      {
+        label: "Joy",
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        borderColor: "rgba(67, 133, 213, 0.8)",
+        backgroundColor: "rgba(67, 133, 213, 0.8)",
+      },
+    ],
+  };
+
   calculateAverageScores(data);
   return <Line options={options} data={datas} />;
 }
