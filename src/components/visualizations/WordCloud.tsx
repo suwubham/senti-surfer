@@ -49,7 +49,7 @@ function countWords(arr: any) {
   for (let i = 0; i < arr.length; i++) {
     const word = arr[i];
     if (wordCount[word]) {
-      wordCount[word]++;
+      wordCount[word] += 200;
     } else {
       wordCount[word] = 1;
     }
@@ -84,8 +84,10 @@ export default function Cloud({ data }: { data: SentimentResults }) {
   return (
     <ReactWordcloud
       //@ts-ignore
+      options={options}
+      //@ts-ignore
       size={size}
-      words={datas.sort((a, b) => b.value - a.value).slice(0, 70)}
+      words={datas.sort((a, b) => b.value - a.value).slice(0, 500)}
     />
   );
 }

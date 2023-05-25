@@ -9,4 +9,5 @@ regex
 requests 
 tensorflow
 uvicorn
+pymongo
 

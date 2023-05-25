@@ -18,7 +18,6 @@ export default function Navbar(props: { theme: string; setTheme: any }) {
           <input type="checkbox" onClick={toggleTheme}></input>
           <span className="slider"></span>
         </label>
-        <ArrowDownOnSquareIcon className="w-7 h-7 hover:cursor-pointer" />
       </div>
     </nav>
   );

@@ -130,3 +130,9 @@ button:active {
   background: #292937;
   box-shadow: inset 20px 20px 60px #23232f, inset -20px -20px 60px #2f2f3f;
 }
+
+.speical {
+  position: absolute;
+  top: 20px;
+  right: 0px;
+}

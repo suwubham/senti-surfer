@@ -3,14 +3,33 @@ import requests
 from dotenv import load_dotenv
 import os
 import pycountry
-
+import re
 from config.db import db
 import datetime
 from transformers import pipeline
+from ai4bharat.transliteration import XlitEngine
+from googletrans import Translator
 
 emotion_classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
 sentiment_analyzer = pipeline('sentiment-analysis', model="cardiffnlp/twitter-roberta-base-sentiment", return_all_scores=True)
+e = XlitEngine(["ne"], beam_width=10, src_script_type = "en")
+translator = Translator()
 
+with open('words.txt', 'r') as f:
+    words = f.read().lower().split()
+
+def is_nwep(text):
+    text = text.lower().split()
+    english_words = set(words).intersection(text)
+    return len(english_words)/len(text) < 0.8
+
+def is_nepali(text):
+    nepali_pattern = re.compile(r'[\u0900-\u097F]+')  # Range of Unicode characters for Nepali script
+    if nepali_pattern.search(text):
+        return True
+    else:
+        return False
+    
 load_dotenv() 
 route_analyzeytsentiment = APIRouter()
 route_analyzesingle = APIRouter()
@@ -74,10 +93,20 @@ def days_between(d1,d2):
     d2 = datetime.datetime.strptime(d2, "%Y-%m-%d")
     return abs((d2 - d1).days)
 
-
 @route_analyzesingle.post("/analyze-single")
 def analyze(text : dict):
     text = text["text"]
+    if is_nepali(text):
+        translated_text = translator.translate(text)
+        print(translated_text.text)
+        text = translated_text.text
+
+    elif is_nwep(text):
+        transliterate_text = e.translit_sentence(text)
+        translated_text = translator.translate(transliterate_text["ne"])
+        print(translated_text.text)
+        text = translated_text.text
+    
     data = emotion_classifier(text)[0]
     senti = sentiment_analyzer(text)[0]
     senti_scores = {}

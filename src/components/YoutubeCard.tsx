@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 function YoutubeCard({ videoDetails, analysed, valid, handleClick }: any) {
+  console.log(valid);
   return (
     <div className="p-3">
       <div className=" rounded-lg shadow-md p-4 card">
@@ -52,12 +53,7 @@ function YoutubeCard({ videoDetails, analysed, valid, handleClick }: any) {
                 <CheckCircleIcon className="w-8 h-8" />
                 Ready for analysis.
               </div>
-            ) : (
-              <div className="dark-bs border border-dashed border-red-400 p-4 text-red-500 rounded-2xl flex gap-2 items-center">
-                <ExclamationCircleIcon className="w-8 h-8" />
-                No content available for analysis.
-              </div>
-            )}
+            ) : null}
 
             {valid && (
               <button
