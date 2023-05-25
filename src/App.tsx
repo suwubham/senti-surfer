@@ -77,7 +77,7 @@ function App() {
 
   return (
     <div className={`${theme} all font-def flex flex-col`}>
-      <Navbar theme={theme} setTheme={setTheme} />
+      <Navbar theme={theme} data={sentimentResults} setTheme={setTheme} />
 
       {valid && (
         <YoutubeCard
