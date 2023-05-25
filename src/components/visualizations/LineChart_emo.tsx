@@ -44,25 +44,33 @@ interface AverageScoresByDate {
 
 export default function MultiLine({ data }: { data: SentimentResults }) {
   var labels = data.map((item) => item.date);
+  labels = [...new Set(labels)]; // remove duplicates
+  labels.sort((a, b) => new Date(a).getTime() - new Date(b).getTime()); // sort labels in ascending order
 
   const datas = {
     labels,
     datasets: [
       {
         label: "Anger",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        data: labels.map(
+          (date) => data.find((item) => item.date === date)?.anger || 0
+        ),
         borderColor: "rgba(255,20,147,0.8)",
         backgroundColor: "rgba(255,20,147,0.8)",
       },
       {
         label: "Disgust",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        data: labels.map(
+          (date) => data.find((item) => item.date === date)?.disgust || 0
+        ),
         borderColor: "rgba(34,139,34,0.8)",
         backgroundColor: "rgba(34,139,34,0.8)",
       },
       {
         label: "Joy",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        data: labels.map(
+          (date) => data.find((item) => item.date === date)?.joy || 0
+        ),
         borderColor: "rgba(67, 133, 213, 0.8)",
         backgroundColor: "rgba(67, 133, 213, 0.8)",
       },
