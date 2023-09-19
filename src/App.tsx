@@ -40,28 +40,27 @@ function App() {
   const [videoDetails, setVideoDetails] = useState<any>({});
 
   useEffect(() => {
-    // chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-    //   const currentUrl = tabs[0].url;
-    //   setCurrentTab(currentUrl);
-    //   if (currentUrl) {
-    //     if (isValidYoutubeVideo(currentUrl)) {
-    //       setValid(true);
-    //       const videoId = getVideoId(currentUrl);
-    //       console.log(videoId);
-    //       if (videoId) {
-    //         const videoDetails = await getYoutubeDetails({ videoId: videoId });
-    //         setVideoDetails(videoDetails);
-    //       }
-    //     } else {
-    //       setValid(false);
-    //     }
-    //   }
-    // });
-    async function getVideoDetails() {
-      let currentUrl =
-        "https://www.youtube.com/watch?v=fjyc9XTtC2Q&list=RDfjyc9XTtC2Q&start_radio=1";
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+      const currentUrl = tabs[0].url;
       setCurrentTab(currentUrl);
-      const videoId = getVideoId(currentUrl);
+      if (currentUrl) {
+        if (isValidYoutubeVideo(currentUrl)) {
+          setValid(true);
+          const videoId = getVideoId(currentUrl);
+          console.log(videoId);
+          if (videoId) {
+            const videoDetails = await getYoutubeDetails({ videoId: videoId });
+            setVideoDetails(videoDetails);
+          }
+        } else {
+          setValid(false);
+        }
+      }
+    });
+    async function getVideoDetails() {
+      if (currentTab) {
+        const videoId = getVideoId(currentTab);
+      }
       //@ts-ignore
       const videoDetails = await getYoutubeDetails({ videoId: videoId });
       setVideoDetails(videoDetails);
