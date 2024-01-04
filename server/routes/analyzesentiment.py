@@ -7,12 +7,80 @@ import re
 from config.db import db
 import datetime
 from transformers import pipeline
-from ai4bharat.transliteration import XlitEngine
 from googletrans import Translator
+import pandas as pd
+import keras
+import re
+from keras_preprocessing.sequence import pad_sequences
+from keras_preprocessing.text import tokenizer_from_json
+import json
+
+lstm_model = keras.models.load_model("sarn.h5")
+
+def romanized_sentiment(comment):
+
+  TAG_RE = re.compile(r'<[^>]+>')
+
+  def remove_tags(text):
+      '''Removes HTML tags: replaces anything between opening and closing <> with empty space'''
+
+      return TAG_RE.sub('', text)
+
+  def preprocess_text(sen):
+      '''Cleans text data up, leaving only 2 or more char long non-stepwords composed of A-Z & a-z only
+      in lowercase'''
+      
+      sentence = sen.lower()
+
+      # Remove html tags
+      sentence = remove_tags(sentence)
+
+      # Remove punctuations and numbers
+      sentence = re.sub('[^a-zA-Z]', ' ', sentence)
+
+      # Single character removal
+      sentence = re.sub(r"\s+[a-zA-Z]\s+", ' ', sentence)  # When we remove apostrophe from the word "Mark's", the apostrophe is replaced by an empty space. Hence, we are left with single character "s" that we are removing here.
+
+      # Remove multiple spaces
+      sentence = re.sub(r'\s+', ' ', sentence)  # Next, we remove all the single characters and replace it by a space which creates multiple spaces in our text. Finally, we remove the multiple spaces from our text as well.
+
+      # Remove Stopwords
+      import json
+      with open("stopwords.json", "r") as stopwords:
+          data = json.load(stopwords)
+      pattern = re.compile(r'\b(' + r'|'.join(data["nepali_stop_words"]) + r')\b\s*')
+      sentence = pattern.sub('', sentence)
+
+      return sentence
+
+  with open('tokenizer.json') as f:
+      data = json.load(f)
+      word_tokenizer = tokenizer_from_json(data)
+  unseen_reviews = [comment]
+  unseen_processed = []
+  for review in unseen_reviews:
+    review = preprocess_text(review)
+    unseen_processed.append(review)
+
+  # Tokenising instance with earlier trained tokeniser
+  unseen_tokenized = word_tokenizer.texts_to_sequences(unseen_processed)
+
+  # Pooling instance to have maxlength of 100 tokens
+  unseen_padded = pad_sequences(unseen_tokenized, padding='post', maxlen=50)
+
+  unseen_sentiments = lstm_model.predict(unseen_padded)
+  data = {
+    'positive': float(unseen_sentiments[0][0]),
+    'negative': 1 - float(unseen_sentiments[0][0]),
+    'neutral': 0 
+  }
+
+
+  return data
 
 emotion_classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
 sentiment_analyzer = pipeline('sentiment-analysis', model="cardiffnlp/twitter-roberta-base-sentiment", return_all_scores=True)
-e = XlitEngine(["ne"], beam_width=10, src_script_type = "en")
+# e = XlitEngine(["ne"], beam_width=10, src_script_type = "en")
 translator = Translator()
 
 with open('words.txt', 'r') as f:
@@ -102,11 +170,10 @@ def analyze(text : dict):
         text = translated_text.text
 
     elif is_nwep(text):
-        transliterate_text = e.translit_sentence(text)
-        translated_text = translator.translate(transliterate_text["ne"])
-        print(translated_text.text)
-        text = translated_text.text
-    
+        print("pinggg!")
+        data = romanized_sentiment(text)
+        return data
+   
     data = emotion_classifier(text)[0]
     senti = sentiment_analyzer(text)[0]
     senti_scores = {}

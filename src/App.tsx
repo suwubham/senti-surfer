@@ -155,7 +155,7 @@ function App() {
           </div>
         </div>
       )}
-      <img src={banner} alt="Banner" width="100%" height="40%" />
+      {/* <img src={banner} alt="Banner" width="100%" height="40%" /> */}
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   Graticule,
   ZoomableGroup,
 } from "react-simple-maps";
+import worldata from "./worlddata.json";
 
 const colorScale = scaleLinear<string>()
   .domain([0, 50, 100])
@@ -46,14 +47,12 @@ export default function Map({ data }: { data: SentimentResults }) {
           />
           <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
           {locationdata.length > 0 && (
-            <Geographies
-              geography={
-                "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
-              }
-            >
+            <Geographies geography={worldata}>
               {({ geographies }) =>
                 geographies.map((geo) => {
-                  const d = locationdata.find((s: any) => s.Country === geo.id);
+                  const d = locationdata.find((s: any) => {
+                    return s["Country"] === geo.id;
+                  });
                   const color = d ? colorScale(d["Score"]) : "#F5F4F6";
                   const toolTip: toolTip = {
                     name: geo.properties.name,
